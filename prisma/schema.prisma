@@ -22,8 +22,7 @@ model User {
 
 model Todos {
   id        Int     @id @default(autoincrement())
-  content   String?
-  published Boolean @default(false)
+  content   String
   author    User    @relation(fields: [authorId], references: [id])
   authorId  Int
 }

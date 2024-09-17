@@ -1,37 +1,36 @@
-import { Button, Container, Group, Text } from '@mantine/core';
+import { Button, Container, Text, TextInput, Title } from '@mantine/core';
+import React from 'react';
+import { ListItem } from '@/components/ListItem';
+import { createTodo, getAllTodos } from '@/utils/dbQueries';
+import { getServerSession } from 'next-auth';
+import { revalidatePath } from 'next/cache';
 
-export default function Home() {
+export default async function Page() {
+  const todos = await getAllTodos();
+  const session = await getServerSession()
+  console.log(session?.user)
+  
+
+  const create = async (formData: FormData) => {
+    'use server';
+    const data = {
+      content: formData.get('content') as string,
+    };
+    await createTodo(data);
+    revalidatePath('/');
+  };
+
   return (
-    <div>
-      <Container size={700}>
-        <h1>
-          Landing Page
-        </h1>
-
-        <Text c="dimmed">
-          Build fully functional accessible web applications with ease – Mantine
-          includes more than 100 customizable components and hooks to cover you
-          in any situation
-        </Text>
-
-        <Group>
-          <Button
-            size="xl"
-            variant="gradient"
-            gradient={{ from: 'blue', to: 'cyan' }}
-          >
-            Get started
-          </Button>
-
-          <Button
-            component="a"
-            size="xl"
-            variant="default"
-          >
-            GitHub
-          </Button>
-        </Group>
-      </Container>
-    </div>
+    <Container className="flex flex-col gap-2">
+      <Title>Good Morning {session?.user?.name}!</Title>
+      <Text c="dimmed">What&#39;s on the to do list for the day?</Text>
+      <form className="flex flex-row gap-2" action={create}>
+        <TextInput name="content" w={'50%'} placeholder="Add item" />
+        <Button type="submit">Add to List</Button>
+      </form>
+      {todos.map((el) => (
+        <ListItem key={el.id} content={el.content} id={el.id}/>
+      ))}
+    </Container>
   );
 }
