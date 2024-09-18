@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 
 export default function CompleteSelected() {
   const checkedItems = useTodoStore((state) => state.checkedItems);
+  const resetChecked = useTodoStore((state) => state.resetChecked);
   const router = useRouter();
 
   const handleDelete = async () => {
@@ -20,6 +21,7 @@ export default function CompleteSelected() {
     if (!response.ok) {
       throw new Error('Failed to update the todo');
     }
+    resetChecked();
     router.refresh();
   };
 
