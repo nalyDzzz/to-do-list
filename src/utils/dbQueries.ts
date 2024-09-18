@@ -9,6 +9,27 @@ export async function fetchSession() {
   return session;
 }
 
+export async function addUserToDb(email: string, name: string) {
+  try {
+    const existingUser = await prisma.user.findUnique({ where: { email } });
+    if (existingUser) {
+      return true;
+    } else {
+      await prisma.user.create({
+        data: {
+          name: name,
+          email: email,
+        },
+      });
+      return true;
+    }
+  } catch (error) {
+    if (error) console.error(error);
+    return false;
+  }
+  
+}
+
 export async function getAllTodos() {
   const session = await fetchSession();
   return await prisma.todos.findMany({
