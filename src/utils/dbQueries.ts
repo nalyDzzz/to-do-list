@@ -12,6 +12,7 @@ export async function fetchSession() {
 export async function getAllTodos() {
   const session = await fetchSession();
   return await prisma.todos.findMany({
+    orderBy: {id: 'asc'},
     where: {
       author: {
         email: session.user?.email as string,
@@ -35,4 +36,17 @@ export async function deleteTodo(id: number) {
     if (!session) return null;
     return await prisma.todos.delete({where: {id: id}})
 
+};
+
+export async function updateTodo(id:number, content: string) {
+  const session = await fetchSession();
+  if (!session) return null;
+  return await prisma.todos.update({
+    where: {
+      id: id,
+    },
+    data: {
+      content: content
+    }
+  })
 }

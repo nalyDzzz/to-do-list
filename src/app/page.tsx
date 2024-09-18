@@ -8,9 +8,7 @@ import { revalidatePath } from 'next/cache';
 export default async function Page() {
   const todos = await getAllTodos();
   const session = await getServerSession()
-  console.log(session?.user)
   
-
   const create = async (formData: FormData) => {
     'use server';
     const data = {
@@ -29,7 +27,7 @@ export default async function Page() {
         <Button type="submit">Add to List</Button>
       </form>
       {todos.map((el) => (
-        <ListItem key={el.id} content={el.content} id={el.id}/>
+        <ListItem key={el.id} content={el.content || ''} id={el.id}/>
       ))}
     </Container>
   );
