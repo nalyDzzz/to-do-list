@@ -1,0 +1,7 @@
+[data-mantine-color-scheme='light'] .paper {
+  background-color: var(--mantine-color-gray-4);
+}
+
+[data-mantine-color-scheme='dark'] .paper {
+  background-color: var(--mantine-color-dark-8);
+}

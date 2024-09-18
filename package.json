@@ -12,6 +12,7 @@
     "@mantine/core": "^7.12.2",
     "@mantine/hooks": "^7.12.2",
     "@prisma/client": "^5.19.1",
+    "cookies-next": "^4.2.1",
     "next": "14.2.11",
     "next-auth": "^4.24.7",
     "react": "^18",

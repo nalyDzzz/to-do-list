@@ -10,6 +10,7 @@ import {
 } from '@mantine/core';
 import { getServerSession } from 'next-auth';
 import React from 'react';
+import ThemeToggle from './ThemeToggle';
 
 export default async function Header() {
   const session = await getServerSession();
@@ -25,7 +26,7 @@ export default async function Header() {
           </MenuTarget>
           <MenuDropdown>
             <MenuLabel>Options</MenuLabel>
-            <MenuItem>Toggle Theme</MenuItem>
+            <ThemeToggle />
             <MenuItem component='a' href="/api/auth/signout">Sign out</MenuItem>
           </MenuDropdown>
         </Menu>
