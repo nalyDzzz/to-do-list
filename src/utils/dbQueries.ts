@@ -59,6 +59,16 @@ export async function deleteTodo(id: number) {
 
 };
 
+export async function deleteMultipleTodos(ids: number[]) {
+  const session = await fetchSession();
+  if (!session) return null;
+  return await prisma.todos.deleteMany({where: {
+    id: {
+      in: ids
+    }
+  }})
+}
+
 export async function updateTodo(id:number, content: string) {
   const session = await fetchSession();
   if (!session) return null;

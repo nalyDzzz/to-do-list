@@ -5,6 +5,7 @@ import { FaPencil, FaTrash, FaCheck } from 'react-icons/fa6';
 import { useMediaQuery } from '@mantine/hooks';
 import { useRouter } from 'next/navigation';
 import classes from './ListItem.module.css';
+import { useTodoStore } from '@/utils/store/useTodoStore';
 
 type Props = {
   content: string;
@@ -13,9 +14,11 @@ type Props = {
 
 export const ListItem = ({ content, id }: Props) => {
   const [isEditing, setIsEditing] = useState(false);
+  const [checked, setChecked] = useState(false);
   const [value, setValue] = useState('');
   const isDesktop = useMediaQuery('(min-width: 768px)');
   const router = useRouter();
+  const toggleChecked = useTodoStore((state) => state.toggleChecked);
 
   const handleDelete = async () => {
     const result = await fetch(`/api/todos/${id}`, {
@@ -32,6 +35,10 @@ export const ListItem = ({ content, id }: Props) => {
   };
 
   const handleSave = async () => {
+    if (value === content) {
+      setIsEditing(false);
+      return;
+    }
     const result = await fetch(`/api/todos/${id}`, {
       method: 'PUT',
       headers: {
@@ -44,6 +51,11 @@ export const ListItem = ({ content, id }: Props) => {
     }
     router.refresh();
     setIsEditing(false);
+  };
+
+  const handleCheck = () => {
+    setChecked(!checked);
+    toggleChecked(id);
   };
 
   useEffect(() => {
@@ -61,8 +73,16 @@ export const ListItem = ({ content, id }: Props) => {
         radius="md"
       >
         <div className="flex flex-row items-center gap-2 justify-center">
-          <Checkbox size={isDesktop ? 'sm' : 'xs'} />
-          {!isEditing && <Text size={isDesktop ? 'md' : 'sm'}>{content}</Text>}
+          <Checkbox
+            size={isDesktop ? 'sm' : 'xs'}
+            onChange={handleCheck}
+            checked={checked}
+          />
+          {!isEditing && (
+            <Text size={isDesktop ? 'md' : 'sm'} onClick={handleCheck}>
+              {content}
+            </Text>
+          )}
           {isEditing && (
             <>
               <TextInput

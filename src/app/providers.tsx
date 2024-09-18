@@ -1,4 +1,3 @@
-// components/ThemeProvider.tsx
 'use client';
 import { MantineProvider, MantineColorsTuple, createTheme, ColorSchemeScript } from '@mantine/core';
 import React from 'react';
