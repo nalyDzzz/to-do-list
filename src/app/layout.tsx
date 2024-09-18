@@ -6,6 +6,7 @@ import {
   MantineProvider,
   MantineColorsTuple,
 } from '@mantine/core';
+import Header from '@/components/Header';
 
 const primary: MantineColorsTuple = [
   '#faf1fe',
@@ -59,6 +60,7 @@ export default function RootLayout({
       </head>
       <body>
         <MantineProvider defaultColorScheme="auto" theme={theme} withStaticClasses={false}>
+          <Header />
           {children}
         </MantineProvider>
       </body>
