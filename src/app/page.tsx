@@ -6,8 +6,11 @@ import { getServerSession } from 'next-auth';
 import { revalidatePath } from 'next/cache';
 
 export default async function Page() {
+  
   const todos = await getAllTodos();
-  const session = await getServerSession()
+  const session = await getServerSession();
+
+  
   
   const create = async (formData: FormData) => {
     'use server';
@@ -20,9 +23,9 @@ export default async function Page() {
 
   return (
     <Container className="flex flex-col gap-2">
-      <Title>Good Morning {session?.user?.name}!</Title>
+      <Title>{ResponsiveTitle()}, {session?.user?.name}!</Title>
       <Text c="dimmed">What&#39;s on the to do list for the day?</Text>
-      <form className="flex flex-row gap-2" action={create}>
+      <form className="flex flex-row gap-2 justify-center" action={create}>
         <TextInput name="content" w={'50%'} placeholder="Add item" />
         <Button type="submit">Add to List</Button>
       </form>
@@ -31,4 +34,17 @@ export default async function Page() {
       ))}
     </Container>
   );
+}
+
+function ResponsiveTitle() {
+  const date = new Date();
+  const hours = date.getHours()
+
+  if (hours > 0 && hours < 12) {
+    return "Good Morning"
+  } else if (hours > 12 && hours < 17) {
+    return "Good Afternoon"
+  } else {
+    return "Good Evening"
+  }
 }

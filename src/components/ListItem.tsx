@@ -1,17 +1,7 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import {
-  Box,
-  Paper,
-  Text,
-  Group,
-  Button,
-  Checkbox,
-  TextInput,
-  useMantineColorScheme,
-  useComputedColorScheme,
-} from '@mantine/core';
-import { FaPencil, FaTrash } from 'react-icons/fa6';
+import { Box, Paper, Text, Button, Checkbox, TextInput } from '@mantine/core';
+import { FaPencil, FaTrash, FaCheck } from 'react-icons/fa6';
 import { useMediaQuery } from '@mantine/hooks';
 import { useRouter } from 'next/navigation';
 import classes from './ListItem.module.css';
@@ -22,7 +12,6 @@ type Props = {
 };
 
 export const ListItem = ({ content, id }: Props) => {
-  const computedColorScheme = useComputedColorScheme();
   const [isEditing, setIsEditing] = useState(false);
   const [value, setValue] = useState('');
   const isDesktop = useMediaQuery('(min-width: 768px)');
@@ -67,28 +56,36 @@ export const ListItem = ({ content, id }: Props) => {
     <Box className="flex flex-col gap-2">
       <Paper
         classNames={{ root: classes.paper }}
-        className="p-2 md:px-5 flex justify-between"
+        className="p-2 md:px-5 flex justify-between gap-2"
         shadow="xl"
         radius="md"
       >
-        <Group>
-          <Checkbox className="" />
-          {!isEditing && <Text>{content}</Text>}
+        <div className="flex flex-row items-center gap-2 justify-center">
+          <Checkbox size={isDesktop ? 'sm' : 'xs'} />
+          {!isEditing && <Text size={isDesktop ? 'md' : 'sm'}>{content}</Text>}
           {isEditing && (
             <>
               <TextInput
                 value={value}
                 onChange={(e) => setValue(e.target.value)}
               />
-              <Button onClick={handleSave}>Save</Button>
+              <Button
+                leftSection={isDesktop && <FaCheck />}
+                size={isDesktop ? 'sm' : 'xs'}
+                onClick={handleSave}
+              >
+                {isDesktop && 'Save'}
+                {!isDesktop && <FaCheck />}
+              </Button>
             </>
           )}
-        </Group>
-        <Group>
+        </div>
+        <div className="flex gap-2 items-center justify-center">
           <Button
             color="gray.7"
             leftSection={isDesktop ? <FaPencil /> : false}
             onClick={handleEdit}
+            size={isDesktop ? 'sm' : 'xs'}
           >
             {isDesktop ? 'Edit' : <FaPencil />}
           </Button>
@@ -96,10 +93,11 @@ export const ListItem = ({ content, id }: Props) => {
             color="secondary"
             leftSection={isDesktop ? <FaTrash /> : false}
             onClick={handleDelete}
+            size={isDesktop ? 'sm' : 'xs'}
           >
             {isDesktop ? 'Delete' : <FaTrash />}
           </Button>
-        </Group>
+        </div>
       </Paper>
     </Box>
   );
