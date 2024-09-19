@@ -33,7 +33,7 @@ export default async function Page() {
         </form>
       </div>
       {todos.map((el) => (
-        <ListItem key={el.id} content={el.content || ''} id={el.id} />
+        <ListItem key={el.id} content={el.content || ''} id={el.id} isChecked={el.completed}/>
       ))}
     </Container>
   );

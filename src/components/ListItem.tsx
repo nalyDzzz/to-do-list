@@ -10,9 +10,10 @@ import { useTodoStore } from '@/utils/store/useTodoStore';
 type Props = {
   content: string;
   id: number;
+  isChecked: boolean;
 };
 
-export const ListItem = ({ content, id }: Props) => {
+export const ListItem = ({ content, id, isChecked }: Props) => {
   const [isEditing, setIsEditing] = useState(false);
   const [checked, setChecked] = useState(false);
   const [value, setValue] = useState('');
