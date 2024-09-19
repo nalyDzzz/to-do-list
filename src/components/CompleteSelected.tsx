@@ -4,6 +4,7 @@ import { useTodoStore } from '@/utils/store/useTodoStore';
 import { Button, Menu } from '@mantine/core';
 import { FaAlignJustify } from 'react-icons/fa6';
 import { useRouter } from 'next/navigation';
+import { deleteMultipleTodos } from '@/utils/dbQueries';
 
 export default function CompleteSelected() {
   const checkedItems = useTodoStore((state) => state.checkedItems);
@@ -11,19 +12,14 @@ export default function CompleteSelected() {
   const router = useRouter();
 
   const handleDelete = async () => {
-    const response = await fetch('/api/todos', {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ idsToDelete: checkedItems }),
-    });
-    if (!response.ok) {
-      throw new Error('Failed to update the todo');
-    }
+    await deleteMultipleTodos(checkedItems)
     resetChecked();
     router.refresh();
   };
+
+  // const handleComplete = async () => {
+    
+  // }
 
   if (checkedItems.length === 0) return null;
 

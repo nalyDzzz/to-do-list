@@ -6,6 +6,7 @@ import { useMediaQuery } from '@mantine/hooks';
 import { useRouter } from 'next/navigation';
 import classes from './ListItem.module.css';
 import { useTodoStore } from '@/utils/store/useTodoStore';
+import { deleteTodo, updateTodo } from '@/utils/dbQueries';
 
 type Props = {
   content: string;
@@ -22,12 +23,7 @@ export const ListItem = ({ content, id, isChecked }: Props) => {
   const toggleChecked = useTodoStore((state) => state.toggleChecked);
 
   const handleDelete = async () => {
-    const result = await fetch(`/api/todos/${id}`, {
-      method: 'DELETE',
-    });
-    if (!result.ok) {
-      throw new Error('Failed to delete the todo.');
-    }
+    await deleteTodo(id);
     router.refresh();
   };
 
@@ -40,16 +36,7 @@ export const ListItem = ({ content, id, isChecked }: Props) => {
       setIsEditing(false);
       return;
     }
-    const result = await fetch(`/api/todos/${id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ content: value }),
-    });
-    if (!result.ok) {
-      throw new Error('Failed to update the todo');
-    }
+    await updateTodo(id, value);
     router.refresh();
     setIsEditing(false);
   };

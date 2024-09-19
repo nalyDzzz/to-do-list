@@ -31,6 +31,7 @@ export async function addUserToDb(email: string, name: string) {
 }
 
 export async function getAllTodos() {
+  console.log('getAllTodos has been called')
   const session = await fetchSession();
   return await prisma.todos.findMany({
     orderBy: {id: 'asc'},
@@ -42,7 +43,7 @@ export async function getAllTodos() {
   });
 }
 
-export async function createTodo(formData: { content: string | undefined }) {
+export async function createTodo(formData: { content: string}) {
   const session = await fetchSession();
   return await prisma.todos.create({
     data: {
