@@ -33,7 +33,6 @@ export async function addUserToDb(email: string, name: string) {
 
 export async function getAllTodos() {
   const session = await fetchSession();
-  await new Promise((resolve) => setTimeout(resolve, 3000));
   return await prisma.todos.findMany({
     orderBy: { id: 'asc' },
     where: {
