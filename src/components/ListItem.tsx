@@ -19,18 +19,7 @@ export const ListItem = ({ content, id, completed }: Props) => {
   const [checked, setChecked] = useState(false);
   const [value, setValue] = useState('');
   const isDesktop = useMediaQuery('(min-width: 768px)');
-  const router = useRouter();
   const toggleChecked = useTodoStore((state) => state.toggleChecked);
-
-  const handleDelete = async () => {
-    await deleteTodo(id);
-    router.refresh();
-  };
-
-  const handleComplete = async () => {
-    await completeTodo(id);
-    router.refresh();
-  };
 
   const handleEdit = async () => {
     setIsEditing(!isEditing);
@@ -90,26 +79,11 @@ export const ListItem = ({ content, id, completed }: Props) => {
           >
             {isDesktop ? 'Edit' : <FaPencil />}
           </Button>
-          {!completed && (
-            <Button
-              color="secondary"
-              leftSection={isDesktop ? <FaCheck /> : false}
-              onClick={handleComplete}
-              size={isDesktop ? 'sm' : 'xs'}
-            >
-              {isDesktop ? 'Complete' : <FaCheck />}
-            </Button>
-          )}
-          {completed && (
-            <Button
-              color="secondary"
-              leftSection={isDesktop ? <FaTrash /> : false}
-              onClick={handleDelete}
-              size={isDesktop ? 'sm' : 'xs'}
-            >
-              {isDesktop ? 'Delete' : <FaTrash />}
-            </Button>
-          )}
+          <CompleteOrDeleteButton
+            isDesktop={isDesktop}
+            completed={completed}
+            id={id}
+          />
         </div>
       </Paper>
     </Box>
@@ -161,6 +135,61 @@ const EditingInput: React.FC<EditingInputProps> = ({
         {isDesktop && 'Save'}
         {!isDesktop && <FaCheck />}
       </Button>
+    </>
+  );
+};
+
+type CompleteOrDeleteButtonProps = {
+  isDesktop: boolean | undefined;
+  completed: boolean;
+  id: number;
+};
+
+const CompleteOrDeleteButton: React.FC<CompleteOrDeleteButtonProps> = ({
+  isDesktop,
+  completed,
+  id,
+}) => {
+  const [visible, { toggle }] = useDisclosure(false);
+  const router = useRouter();
+  const handleComplete = async () => {
+    toggle();
+    await completeTodo(id);
+    toggle();
+    router.refresh();
+  };
+
+  const handleDelete = async () => {
+    toggle();
+    await deleteTodo(id);
+    toggle();
+    router.refresh();
+  };
+
+  return (
+    <>
+      {!completed && (
+        <Button
+          color="secondary"
+          leftSection={isDesktop ? <FaCheck /> : false}
+          onClick={handleComplete}
+          size={isDesktop ? 'sm' : 'xs'}
+          loading={visible}
+        >
+          {isDesktop ? 'Complete' : <FaCheck />}
+        </Button>
+      )}
+      {completed && (
+        <Button
+          color="secondary"
+          leftSection={isDesktop ? <FaTrash /> : false}
+          onClick={handleDelete}
+          size={isDesktop ? 'sm' : 'xs'}
+          loading={visible}
+        >
+          {isDesktop ? 'Delete' : <FaTrash />}
+        </Button>
+      )}
     </>
   );
 };
