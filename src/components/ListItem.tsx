@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Paper, Text, Button, Checkbox, TextInput } from '@mantine/core';
 import { FaPencil, FaTrash, FaCheck } from 'react-icons/fa6';
-import { useMediaQuery } from '@mantine/hooks';
+import { useDisclosure, useMediaQuery } from '@mantine/hooks';
 import { useRouter } from 'next/navigation';
 import classes from './ListItem.module.css';
 import { useTodoStore } from '@/utils/store/useTodoStore';
@@ -28,22 +28,12 @@ export const ListItem = ({ content, id, completed }: Props) => {
   };
 
   const handleComplete = async () => {
-    await completeTodo(id)
+    await completeTodo(id);
     router.refresh();
-  }
+  };
 
   const handleEdit = async () => {
     setIsEditing(!isEditing);
-  };
-
-  const handleSave = async () => {
-    if (value === content) {
-      setIsEditing(false);
-      return;
-    }
-    await updateTodo(id, value);
-    router.refresh();
-    setIsEditing(false);
   };
 
   const handleCheck = () => {
@@ -81,20 +71,14 @@ export const ListItem = ({ content, id, completed }: Props) => {
             </Text>
           )}
           {isEditing && (
-            <>
-              <TextInput
-                value={value}
-                onChange={(e) => setValue(e.target.value)}
-              />
-              <Button
-                leftSection={isDesktop && <FaCheck />}
-                size={isDesktop ? 'sm' : 'xs'}
-                onClick={handleSave}
-              >
-                {isDesktop && 'Save'}
-                {!isDesktop && <FaCheck />}
-              </Button>
-            </>
+            <EditingInput
+              isDesktop={isDesktop}
+              value={value}
+              setValue={setValue}
+              setIsEditing={setIsEditing}
+              content={content}
+              id={id}
+            />
           )}
         </div>
         <div className="flex gap-2 items-center justify-center">
@@ -129,5 +113,54 @@ export const ListItem = ({ content, id, completed }: Props) => {
         </div>
       </Paper>
     </Box>
+  );
+};
+
+type EditingInputProps = {
+  isDesktop: boolean | undefined;
+  value: string;
+  setValue: React.Dispatch<React.SetStateAction<string>>;
+  setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
+  content: string;
+  id: number;
+};
+
+const EditingInput: React.FC<EditingInputProps> = ({
+  isDesktop,
+  value,
+  setValue,
+  setIsEditing,
+  content,
+  id,
+}) => {
+  const router = useRouter();
+  const [visible, { toggle }] = useDisclosure(false);
+
+  const handleSave = async () => {
+    toggle();
+    if (value === content) {
+      setIsEditing(false);
+      toggle();
+      return;
+    }
+    await updateTodo(id, value);
+    toggle();
+    router.refresh();
+    setIsEditing(false);
+  };
+
+  return (
+    <>
+      <TextInput value={value} onChange={(e) => setValue(e.target.value)} />
+      <Button
+        leftSection={isDesktop && <FaCheck />}
+        size={isDesktop ? 'sm' : 'xs'}
+        onClick={handleSave}
+        loading={visible}
+      >
+        {isDesktop && 'Save'}
+        {!isDesktop && <FaCheck />}
+      </Button>
+    </>
   );
 };
