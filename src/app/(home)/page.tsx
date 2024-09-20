@@ -1,4 +1,15 @@
-import { Button, Container, Text, TextInput, Title } from '@mantine/core';
+import {
+  Accordion,
+  AccordionControl,
+  AccordionItem,
+  AccordionPanel,
+  Box,
+  Button,
+  Container,
+  Text,
+  TextInput,
+  Title,
+} from '@mantine/core';
 import React from 'react';
 import { ListItem } from '@/components/ListItem';
 import { createTodo, getAllTodos } from '@/utils/dbQueries';
@@ -27,14 +38,53 @@ export default async function Page() {
       <Text c="dimmed">What&#39;s on the to do list for the day?</Text>
       <div className="grid md:grid-cols-[min-content_1fr] gap-2 md:gap-0">
         <CompleteSelected />
-        <form className='col-start-2 flex flex-row gap-2 md:justify-center' action={create}>
+        <form
+          className="col-start-2 flex flex-row gap-2 md:justify-center"
+          action={create}
+        >
           <TextInput name="content" w={'50%'} placeholder="Add item" />
           <Button type="submit">Add to List</Button>
         </form>
       </div>
-      {todos.map((el) => (
-        <ListItem key={el.id} content={el.content || ''} id={el.id} isChecked={el.completed}/>
-      ))}
+      <Box className="flex flex-col gap-3">
+        {todos.map((el) => {
+          if (!el.completed) {
+            return (
+              <ListItem
+                key={el.id}
+                content={el.content}
+                id={el.id}
+                completed={el.completed}
+              />
+            );
+          }
+        })}
+      </Box>
+      <Box className="pt-4">
+        <Accordion>
+          <AccordionItem value="completed-todos">
+            <AccordionControl>
+              <Title order={4}>Completed</Title>
+            </AccordionControl>
+            <AccordionPanel>
+              <Box className="gap-2 flex flex-col">
+                {todos.map((el) => {
+                  if (el.completed) {
+                    return (
+                      <ListItem
+                        key={el.id}
+                        content={el.content}
+                        id={el.id}
+                        completed={el.completed}
+                      />
+                    );
+                  }
+                })}
+              </Box>
+            </AccordionPanel>
+          </AccordionItem>
+        </Accordion>
+      </Box>
     </Container>
   );
 }
