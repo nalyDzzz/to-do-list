@@ -1,8 +1,7 @@
-'use server'
+'use server';
 import prisma from '@/app/api/db';
 import { getServerSession } from 'next-auth';
 import { checkedItem } from './store/useTodoStore';
-
 
 export async function fetchSession() {
   const session = await getServerSession();
@@ -30,14 +29,13 @@ export async function addUserToDb(email: string, name: string) {
     if (error) console.error(error);
     return false;
   }
-  
 }
 
 export async function getAllTodos() {
-  console.log('getAllTodos has been called')
+  console.log('getAllTodos has been called');
   const session = await fetchSession();
   return await prisma.todos.findMany({
-    orderBy: {id: 'asc'},
+    orderBy: { id: 'asc' },
     where: {
       author: {
         email: session.user?.email as string,
@@ -46,7 +44,7 @@ export async function getAllTodos() {
   });
 }
 
-export async function createTodo(formData: { content: string}) {
+export async function createTodo(formData: { content: string }) {
   const session = await fetchSession();
   return await prisma.todos.create({
     data: {
@@ -57,16 +55,15 @@ export async function createTodo(formData: { content: string}) {
 }
 
 export async function deleteTodo(id: number) {
-    const session = await fetchSession();
-    if (!session) return null;
-    return await prisma.todos.delete({where: {id: id}})
-
-};
+  const session = await fetchSession();
+  if (!session) return null;
+  return await prisma.todos.delete({ where: { id: id } });
+}
 
 export async function deleteMultipleTodos(items: checkedItem[]) {
   const session = await fetchSession();
   if (!session) return null;
-  const ids = items.map(item => item.id)
+  const ids = items.map((item) => item.id);
   return await prisma.todos.deleteMany({
     where: {
       id: {
@@ -76,7 +73,7 @@ export async function deleteMultipleTodos(items: checkedItem[]) {
   });
 }
 
-export async function updateTodo(id:number, content: string) {
+export async function updateTodo(id: number, content: string) {
   const session = await fetchSession();
   if (!session) return null;
   return await prisma.todos.update({
@@ -84,7 +81,20 @@ export async function updateTodo(id:number, content: string) {
       id: id,
     },
     data: {
-      content: content
+      content: content,
+    },
+  });
+}
+
+export async function completeTodo(id: number) {
+  const session = await fetchSession();
+  if (!session) return null;
+  return await prisma.todos.update({
+    where: {
+      id: id
+    },
+    data: {
+      completed: true
     }
   })
 }
@@ -92,29 +102,33 @@ export async function updateTodo(id:number, content: string) {
 export async function completeMultiple(items: checkedItem[]) {
   const session = await fetchSession();
   if (!session) return null;
-  const previouslyCompletedTrue = items.filter(item => item.previousCompleted);
-  const previouslyCompletedFalse = items.filter(item => !item.previousCompleted);
+  const previouslyCompletedTrue = items.filter(
+    (item) => item.previousCompleted
+  );
+  const previouslyCompletedFalse = items.filter(
+    (item) => !item.previousCompleted
+  );
 
-  const idsWithTrue = previouslyCompletedTrue.map(item => item.id);
-  const idsWithFalse = previouslyCompletedFalse.map(item => item.id);
+  const idsWithTrue = previouslyCompletedTrue.map((item) => item.id);
+  const idsWithFalse = previouslyCompletedFalse.map((item) => item.id);
   await prisma.todos.updateMany({
     where: {
       id: {
-        in: idsWithFalse
-      }
+        in: idsWithFalse,
+      },
     },
     data: {
-      completed: true
-    }
-  })
+      completed: true,
+    },
+  });
   return await prisma.todos.updateMany({
     where: {
       id: {
-        in: idsWithTrue
-      }
+        in: idsWithTrue,
+      },
     },
     data: {
       completed: false,
-    }
-  })
+    },
+  });
 }

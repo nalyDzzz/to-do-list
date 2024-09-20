@@ -6,12 +6,12 @@ import { useMediaQuery } from '@mantine/hooks';
 import { useRouter } from 'next/navigation';
 import classes from './ListItem.module.css';
 import { useTodoStore } from '@/utils/store/useTodoStore';
-import { deleteTodo, updateTodo } from '@/utils/dbQueries';
+import { completeTodo, deleteTodo, updateTodo } from '@/utils/dbQueries';
 
 type Props = {
   content: string;
   id: number;
-  completed: boolean
+  completed: boolean;
 };
 
 export const ListItem = ({ content, id, completed }: Props) => {
@@ -26,6 +26,11 @@ export const ListItem = ({ content, id, completed }: Props) => {
     await deleteTodo(id);
     router.refresh();
   };
+
+  const handleComplete = async () => {
+    await completeTodo(id)
+    router.refresh();
+  }
 
   const handleEdit = async () => {
     setIsEditing(!isEditing);
@@ -67,7 +72,11 @@ export const ListItem = ({ content, id, completed }: Props) => {
             checked={checked}
           />
           {!isEditing && (
-            <Text size={isDesktop ? 'md' : 'sm'} onClick={handleCheck}>
+            <Text
+              size={isDesktop ? 'md' : 'sm'}
+              td={completed ? 'line-through' : ''}
+              onClick={handleCheck}
+            >
               {content}
             </Text>
           )}
@@ -97,14 +106,26 @@ export const ListItem = ({ content, id, completed }: Props) => {
           >
             {isDesktop ? 'Edit' : <FaPencil />}
           </Button>
-          <Button
-            color="secondary"
-            leftSection={isDesktop ? <FaTrash /> : false}
-            onClick={handleDelete}
-            size={isDesktop ? 'sm' : 'xs'}
-          >
-            {isDesktop ? 'Delete' : <FaTrash />}
-          </Button>
+          {!completed && (
+            <Button
+              color="secondary"
+              leftSection={isDesktop ? <FaCheck /> : false}
+              onClick={handleComplete}
+              size={isDesktop ? 'sm' : 'xs'}
+            >
+              {isDesktop ? 'Complete' : <FaCheck />}
+            </Button>
+          )}
+          {completed && (
+            <Button
+              color="secondary"
+              leftSection={isDesktop ? <FaTrash /> : false}
+              onClick={handleDelete}
+              size={isDesktop ? 'sm' : 'xs'}
+            >
+              {isDesktop ? 'Delete' : <FaTrash />}
+            </Button>
+          )}
         </div>
       </Paper>
     </Box>

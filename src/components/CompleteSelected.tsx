@@ -1,8 +1,9 @@
 'use client';
 import React from 'react';
 import { useTodoStore } from '@/utils/store/useTodoStore';
-import { Button, Menu } from '@mantine/core';
+import { ActionIcon, Menu } from '@mantine/core';
 import { FaAlignJustify } from 'react-icons/fa6';
+import { FaTrash, FaCheck } from 'react-icons/fa6';
 import { useRouter } from 'next/navigation';
 import { completeMultiple, deleteMultipleTodos } from '@/utils/dbQueries';
 
@@ -29,14 +30,14 @@ export default function CompleteSelected() {
     <>
       <Menu trigger="hover" withArrow>
         <Menu.Target>
-          <Button w="fit-content">
+          <ActionIcon>
             <FaAlignJustify />
-          </Button>
+          </ActionIcon>
         </Menu.Target>
         <Menu.Dropdown>
           <Menu.Label>Checked Items: {checkedItems.length}</Menu.Label>
-          <Menu.Item onClick={handleDelete}>Delete</Menu.Item>
-          <Menu.Item onClick={handleComplete}>Complete</Menu.Item>
+          <Menu.Item onClick={handleDelete} leftSection={<FaTrash />}>Delete</Menu.Item>
+          <Menu.Item onClick={handleComplete} leftSection={<FaCheck />}>Complete</Menu.Item>
         </Menu.Dropdown>
       </Menu>
     </>
