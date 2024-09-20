@@ -6,7 +6,7 @@ const config: Config = {
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
-  darkMode: ["selector", '[data-mantine-color-scheme="dark"]'],
+  darkMode: ['selector', '[data-mantine-color-scheme="dark"]'],
   theme: {
     colors: {
       dark: {
@@ -44,7 +44,10 @@ const config: Config = {
         7: 'var(--mantine-color-secondary-7)',
         8: 'var(--mantine-color-secondary-8)',
         9: 'var(--mantine-color-secondary-9)',
-      }
+      },
+      dimmed: 'var(--mantine-color-dimmed)',
+      textwhite: 'var(--mantine-color-text)',
+      error: 'var(--mantine-color-red-7)',
     },
     extend: {},
   },
