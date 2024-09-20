@@ -2,7 +2,7 @@
 import { create } from '@/utils/helpers';
 import { Button, TextInput } from '@mantine/core';
 import React, { useState } from 'react';
-import { useFormState } from 'react-dom';
+import { useFormState, useFormStatus } from 'react-dom';
 
 const initialState = { errors: [] };
 
@@ -11,10 +11,10 @@ export default function AddItem() {
   const [value, setValue] = useState('');
   return (
     <form
-      className="col-start-2 flex flex-row gap-2 md:justify-center"
+      className="col-start-2 flex flex-row gap-2 md:justify-center relative"
       action={async (formData) => {
-        formAction(formData);
-        setValue('')
+        await formAction(formData);
+        setValue('');
       }}
     >
       <TextInput
@@ -30,7 +30,17 @@ export default function AddItem() {
         value={value}
         onChange={(e) => setValue(e.target.value)}
       />
-      <Button type="submit">Add to List</Button>
+      <FormSubmitButton />
     </form>
   );
 }
+
+const FormSubmitButton = () => {
+  const status = useFormStatus();
+
+  return (
+    <Button type="submit" loading={status.pending}>
+      Add to List
+    </Button>
+  );
+};

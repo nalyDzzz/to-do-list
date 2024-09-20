@@ -91,12 +91,12 @@ export async function completeTodo(id: number) {
   if (!session) return null;
   return await prisma.todos.update({
     where: {
-      id: id
+      id: id,
     },
     data: {
-      completed: true
-    }
-  })
+      completed: true,
+    },
+  });
 }
 
 export async function completeMultiple(items: checkedItem[]) {
