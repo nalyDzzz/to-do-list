@@ -1,22 +1,12 @@
-import {
-  Accordion,
-  AccordionControl,
-  AccordionItem,
-  AccordionPanel,
-  Box,
-  Container,
-  Text,
-  Title,
-} from '@mantine/core';
-import React from 'react';
-import { ListItem } from '@/app/_components/ListItem';
-import { getAllTodos } from '@/utils/dbQueries';
+import { Container, Loader, Text, Title } from '@mantine/core';
+import React, { Suspense } from 'react';
+
 import { getServerSession } from 'next-auth';
 import CompleteSelected from '@/app/_components/CompleteSelected';
 import AddItem from '@/app/_components/AddItem';
+import TodoContainer from '../_components/TodoContainer';
 
 export default async function Page() {
-  const todos = await getAllTodos();
   const session = await getServerSession();
 
   return (
@@ -29,45 +19,15 @@ export default async function Page() {
         <CompleteSelected />
         <AddItem />
       </div>
-      <Box className="flex flex-col gap-3">
-        {todos.map((el) => {
-          if (!el.completed) {
-            return (
-              <ListItem
-                key={el.id}
-                content={el.content}
-                id={el.id}
-                completed={el.completed}
-              />
-            );
-          }
-        })}
-      </Box>
-      <Box className="pt-4">
-        <Accordion>
-          <AccordionItem value="completed-todos">
-            <AccordionControl>
-              <Title order={4}>Completed</Title>
-            </AccordionControl>
-            <AccordionPanel>
-              <Box className="gap-2 flex flex-col">
-                {todos.map((el) => {
-                  if (el.completed) {
-                    return (
-                      <ListItem
-                        key={el.id}
-                        content={el.content}
-                        id={el.id}
-                        completed={el.completed}
-                      />
-                    );
-                  }
-                })}
-              </Box>
-            </AccordionPanel>
-          </AccordionItem>
-        </Accordion>
-      </Box>
+      <Suspense
+        fallback={
+          <div className="text-center pt-10">
+            <Loader />
+          </div>
+        }
+      >
+        <TodoContainer />
+      </Suspense>
     </Container>
   );
 }
