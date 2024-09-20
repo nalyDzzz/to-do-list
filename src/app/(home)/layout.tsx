@@ -1,6 +1,6 @@
 import '@mantine/core/styles.css';
 import '@/styles/globals.css';
-import Header from '@/components/Header';
+import Header from '@/app/_components/Header';
 import ThemeProvider from './providers';
 
 export const metadata = {

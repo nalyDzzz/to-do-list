@@ -14,21 +14,17 @@ export default function CompleteSelected() {
   const [loading, setLoading] = useState(false);
 
   const handleDelete = async () => {
-    console.log('toggle');
     setLoading(true);
     await deleteMultipleTodos(checkedItems);
     resetChecked();
-    console.log('toggle');
     setLoading(false);
     router.refresh();
   };
 
   const handleComplete = async () => {
-    console.log('toggle');
     setLoading(true);
     await completeMultiple(checkedItems);
     resetChecked();
-    console.log('toggle');
     setLoading(false);
     router.refresh();
   };

@@ -9,11 +9,11 @@ import {
   Title,
 } from '@mantine/core';
 import React from 'react';
-import { ListItem } from '@/components/ListItem';
+import { ListItem } from '@/app/_components/ListItem';
 import { getAllTodos } from '@/utils/dbQueries';
 import { getServerSession } from 'next-auth';
-import CompleteSelected from '@/components/CompleteSelected';
-import AddItem from '@/components/AddItem';
+import CompleteSelected from '@/app/_components/CompleteSelected';
+import AddItem from '@/app/_components/AddItem';
 
 export default async function Page() {
   const todos = await getAllTodos();
