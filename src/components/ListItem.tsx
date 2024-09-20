@@ -11,10 +11,10 @@ import { deleteTodo, updateTodo } from '@/utils/dbQueries';
 type Props = {
   content: string;
   id: number;
-  isChecked: boolean;
+  completed: boolean
 };
 
-export const ListItem = ({ content, id, isChecked }: Props) => {
+export const ListItem = ({ content, id, completed }: Props) => {
   const [isEditing, setIsEditing] = useState(false);
   const [checked, setChecked] = useState(false);
   const [value, setValue] = useState('');
@@ -43,7 +43,7 @@ export const ListItem = ({ content, id, isChecked }: Props) => {
 
   const handleCheck = () => {
     setChecked(!checked);
-    toggleChecked(id);
+    toggleChecked(id, completed);
   };
 
   useEffect(() => {

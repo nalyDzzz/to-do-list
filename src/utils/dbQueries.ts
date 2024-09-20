@@ -1,5 +1,8 @@
+'use server'
 import prisma from '@/app/api/db';
 import { getServerSession } from 'next-auth';
+import { checkedItem } from './store/useTodoStore';
+
 
 export async function fetchSession() {
   const session = await getServerSession();
@@ -60,14 +63,17 @@ export async function deleteTodo(id: number) {
 
 };
 
-export async function deleteMultipleTodos(ids: number[]) {
+export async function deleteMultipleTodos(items: checkedItem[]) {
   const session = await fetchSession();
   if (!session) return null;
-  return await prisma.todos.deleteMany({where: {
-    id: {
-      in: ids
-    }
-  }})
+  const ids = items.map(item => item.id)
+  return await prisma.todos.deleteMany({
+    where: {
+      id: {
+        in: ids,
+      },
+    },
+  });
 }
 
 export async function updateTodo(id:number, content: string) {
@@ -79,6 +85,36 @@ export async function updateTodo(id:number, content: string) {
     },
     data: {
       content: content
+    }
+  })
+}
+
+export async function completeMultiple(items: checkedItem[]) {
+  const session = await fetchSession();
+  if (!session) return null;
+  const previouslyCompletedTrue = items.filter(item => item.previousCompleted);
+  const previouslyCompletedFalse = items.filter(item => !item.previousCompleted);
+
+  const idsWithTrue = previouslyCompletedTrue.map(item => item.id);
+  const idsWithFalse = previouslyCompletedFalse.map(item => item.id);
+  await prisma.todos.updateMany({
+    where: {
+      id: {
+        in: idsWithFalse
+      }
+    },
+    data: {
+      completed: true
+    }
+  })
+  return await prisma.todos.updateMany({
+    where: {
+      id: {
+        in: idsWithTrue
+      }
+    },
+    data: {
+      completed: false,
     }
   })
 }
