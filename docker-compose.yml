@@ -13,6 +13,8 @@ services:
         GOOGLE_ID: ${GOOGLE_ID}
         GOOGLE_SECRET: ${GOOGLE_SECRET}
     restart: always
+    volumes:
+      - /mnt/todo/database:/database
     ports:
       - 3000:3000
 
