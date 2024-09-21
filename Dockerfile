@@ -55,8 +55,6 @@ COPY --from=builder --chown=nextjs:nodejs /app/prisma ./prisma
 COPY --from=builder --chown=nextjs:nodejs /app/database ./database
 
 # Environment variables must be redefined at run time
-ARG DATABASE_URL
-ENV DATABASE_URL=${DATABASE_URL}
 ARG GITHUB_ID
 ENV GITHUB_ID=${GITHUB_ID}
 ARG GITHUB_SECRET
