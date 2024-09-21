@@ -10,10 +10,7 @@ COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
 # Omit --production flag for TypeScript devDependencies
 RUN npm ci
 
-COPY src ./src
-COPY next.config.mjs .
-COPY tsconfig.json .
-COPY prisma ./prisma
+COPY . .
 
 # Environment variables must be present at build time
 # https://github.com/vercel/next.js/discussions/14030
