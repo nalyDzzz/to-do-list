@@ -165,7 +165,7 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 ## Contact
 
-Your Name - [@nalyDzzz](https://twitter.com/nalyDzzz) - email@example.com
+Dylan - [@nalyDzzz](https://twitter.com/nalyDzzz) - dylanmarin2018@gmail.com
 
 Project Link: [https://github.com/nalyDzzz/to-do-list](https://github.com/nalyDzzz/to-do-list)
 
